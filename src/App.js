@@ -8,14 +8,21 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
   useEffect(() => {
-    const user = window.localStorage.getItem("LoggedUser");
-    if (user) setUser(JSON.parse(user));
+    const savedLogin = window.localStorage.getItem("LoggedUser");
+    if (savedLogin) {
+      const user = JSON.parse(savedLogin);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
   }, []);
 
   const handleLogin = async (e) => {
@@ -28,6 +35,7 @@ const App = () => {
       });
       window.localStorage.setItem("LoggedUser", JSON.stringify(user));
 
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -41,12 +49,24 @@ const App = () => {
     setUser("");
   };
 
+  const handleCreate = (e) => {
+    e.preventDefault();
+
+    const blog = {
+      title,
+      author,
+      url,
+    };
+
+    blogService.create(blog);
+  };
+
   return (
     <div>
       {!user ? (
         <form onSubmit={handleLogin}>
           <div>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Username: </label>
             <input
               type="text"
               name="Username"
@@ -56,7 +76,7 @@ const App = () => {
             />
           </div>
           <div>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Password: </label>
             <input
               type="password"
               name="Password"
@@ -75,6 +95,41 @@ const App = () => {
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
+          <h2>Create New Blog</h2>
+          <form onSubmit={handleCreate}>
+            <div>
+              <label htmlFor="title">title:</label>
+              <input
+                type="text"
+                name="Title"
+                id="title"
+                value={title}
+                onChange={({ target }) => setTitle(target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="author">author:</label>
+              <input
+                type="text"
+                name="Author"
+                id="author"
+                value={author}
+                onChange={({ target }) => setAuthor(target.value)}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="url">url:</label>
+              <input
+                type="text"
+                name="Url"
+                id="url"
+                value={url}
+                onChange={({ target }) => setUrl(target.value)}
+              />
+            </div>
+            <button type="submit">create</button>
+          </form>
         </div>
       )}
     </div>
