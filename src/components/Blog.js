@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Blog = ({ blog, updateLikes }) => {
+const Blog = ({ blog, updateLikes, userName, handleDelete }) => {
   const [detail, setDetails] = useState(false);
   const blogStyle = {
     paddingTop: 10,
@@ -10,10 +10,16 @@ const Blog = ({ blog, updateLikes }) => {
     marginBottom: 5,
   };
 
+  const userRemoveBtnCheck = blog.user.name === userName;
+
   const handleView = () => setDetails(!detail);
 
-  const moreLikes = async () => {
-    await updateLikes({ ...blog, likes: blog.likes + 1 });
+  const moreLikes = () => {
+    updateLikes({ ...blog, likes: blog.likes + 1 });
+  };
+
+  const deleteBlog = () => {
+    handleDelete(blog);
   };
 
   return !detail ? (
@@ -27,7 +33,8 @@ const Blog = ({ blog, updateLikes }) => {
       {blog.url} <br />
       likes {blog.likes} <button onClick={moreLikes}>like</button>
       <br />
-      {blog.user.name}
+      {blog.user.name} <br />
+      {userRemoveBtnCheck && <button onClick={deleteBlog}>remove</button>}
     </div>
   );
 };

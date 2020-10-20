@@ -68,7 +68,9 @@ const App = () => {
   // Create Blog
   const handleCreate = (blog) => {
     try {
-      blogService.create(blog).then((blog) => setBlogs([...blogs, blog]));
+      blogService.create(blog).then(() => {
+        blogService.getAll().then((blogs) => setBlogs(blogs));
+      });
       notificationHandler(
         `a new blog ${blog.title} by ${blog.author} added`,
         "success"
@@ -83,6 +85,21 @@ const App = () => {
     await blogService.updateBlog(blog);
     const blogs = await blogService.getAll();
     setBlogs(blogs);
+  };
+
+  // Delete likes
+  const handleDelete = (blog) => {
+    try {
+      const check = window.confirm(`Remove blog ${blog.title}`);
+      if (check) {
+        blogService
+          .deleteBlog(blog)
+          .then(() => setBlogs(blogs.filter((b) => b.id !== blog.id)));
+        notificationHandler("blog removed", "success");
+      }
+    } catch (err) {
+      notificationHandler("something went wrong", "error");
+    }
   };
 
   const blogForm = () => (
@@ -130,7 +147,13 @@ const App = () => {
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
-              <Blog key={blog.id} blog={blog} updateLikes={handleLikes} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateLikes={handleLikes}
+                userName={user.name}
+                handleDelete={handleDelete}
+              />
             ))}
         </div>
       )}
