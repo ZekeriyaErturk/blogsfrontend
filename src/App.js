@@ -14,10 +14,12 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [color, setColor] = useState(null);
 
+  // Get Blogs
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  // Check for if user logged in previously
   useEffect(() => {
     const savedLogin = window.localStorage.getItem("LoggedUser");
     if (savedLogin) {
@@ -36,6 +38,7 @@ const App = () => {
     }, 3000);
   };
 
+  // Login User
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -56,11 +59,13 @@ const App = () => {
     }
   };
 
+  // Logout User
   const handleLogout = () => {
     window.localStorage.clear();
     setUser("");
   };
 
+  // Create Blog
   const handleCreate = (blog) => {
     try {
       blogService.create(blog).then((blog) => setBlogs([...blogs, blog]));
@@ -71,6 +76,13 @@ const App = () => {
     } catch (err) {
       notificationHandler("something went wrong", "error");
     }
+  };
+
+  // Update likes
+  const handleLikes = async (blog) => {
+    await blogService.updateBlog(blog);
+    const blogs = await blogService.getAll();
+    setBlogs(blogs);
   };
 
   const blogForm = () => (
@@ -116,7 +128,7 @@ const App = () => {
           </p>
           <h2>blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateLikes={handleLikes} />
           ))}
         </div>
       )}
