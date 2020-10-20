@@ -18,3 +18,7 @@
 .error {
   color: red;
 }
+
+button {
+  border-radius: 0.2rem;
+}
