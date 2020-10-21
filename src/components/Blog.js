@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 const Blog = ({ blog, updateLikes, userName, handleDelete }) => {
   const [detail, setDetails] = useState(false);
@@ -24,12 +25,12 @@ const Blog = ({ blog, updateLikes, userName, handleDelete }) => {
 
   return !detail ? (
     <div style={blogStyle}>
-      {blog.title} {blog.author} <button onClick={handleView}>view</button>
+      {blog.title} {blog.author} <button onClick={handleView}>show</button>
     </div>
   ) : (
     <div style={blogStyle}>
       {blog.title} {blog.author}
-      <button onClick={handleView}>view</button> <br />
+      <button onClick={handleView}>hide</button> <br />
       {blog.url} <br />
       likes {blog.likes} <button onClick={moreLikes}>like</button>
       <br />
@@ -37,6 +38,13 @@ const Blog = ({ blog, updateLikes, userName, handleDelete }) => {
       {userRemoveBtnCheck && <button onClick={deleteBlog}>remove</button>}
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateLikes: PropTypes.func.isRequired,
+  userName: PropTypes.string.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
 export default Blog;
