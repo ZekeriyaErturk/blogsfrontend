@@ -1,12 +1,12 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import Blog from "./Blog";
 
-// Make a test which checks that the component displaying a blog renders the blog's title and author
-// but does not render its url or number of likes by default
-
 test("Check if details hiden by default", () => {
+  // Disable warning for PropTypes
+  console.error = jest.fn();
+
   const blog = {
     title: "test",
     author: "test writer",
@@ -29,4 +29,30 @@ test("Check if details hiden by default", () => {
   expect(div).not.toHaveTextContent(blog.likes);
   // Check for url
   expect(div).not.toHaveTextContent(blog.url);
+});
+
+test("Check if details shown when button clicked", () => {
+  console.error = jest.fn();
+
+  const blog = {
+    title: "test",
+    author: "test writer",
+    url: "www.test.com",
+    likes: 100,
+    user: {
+      name: "blog poster",
+      username: "blogger",
+    },
+  };
+
+  const component = render(<Blog blog={blog} />);
+  component.debug();
+
+  const button = component.container.querySelector("button");
+  fireEvent.click(button);
+
+  const div = component.container.querySelector(".hide");
+
+  expect(div).toHaveTextContent(blog.likes);
+  expect(div).toHaveTextContent(blog.url);
 });
