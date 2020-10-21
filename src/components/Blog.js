@@ -24,15 +24,18 @@ const Blog = ({ blog, updateLikes, userName, handleDelete }) => {
   };
 
   return !detail ? (
-    <div style={blogStyle} className="show">
+    <div style={blogStyle} className="show-details">
       {blog.title} {blog.author} <button onClick={handleView}>show</button>
     </div>
   ) : (
-    <div style={blogStyle} className="hide">
+    <div style={blogStyle} className="hide-details">
       {blog.title} {blog.author}
       <button onClick={handleView}>hide</button> <br />
       {blog.url} <br />
-      likes {blog.likes} <button onClick={moreLikes}>like</button>
+      likes {blog.likes}{" "}
+      <button onClick={moreLikes} className="like">
+        like
+      </button>
       <br />
       {blog.user.name} <br />
       {userRemoveBtnCheck && <button onClick={deleteBlog}>remove</button>}
