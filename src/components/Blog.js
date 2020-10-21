@@ -24,11 +24,11 @@ const Blog = ({ blog, updateLikes, userName, handleDelete }) => {
   };
 
   return !detail ? (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="show">
       {blog.title} {blog.author} <button onClick={handleView}>show</button>
     </div>
   ) : (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="hide">
       {blog.title} {blog.author}
       <button onClick={handleView}>hide</button> <br />
       {blog.url} <br />
