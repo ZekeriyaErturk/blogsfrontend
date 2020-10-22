@@ -103,7 +103,7 @@ const App = () => {
   };
 
   const blogForm = () => (
-    <Toggleable buttonLabel="new note">
+    <Toggleable buttonLabel="new blog">
       <BlogForm createBlog={handleCreate} />
     </Toggleable>
   );
